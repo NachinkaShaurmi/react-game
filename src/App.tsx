@@ -1,11 +1,27 @@
 import React from "react";
-import "./App.css";
+import "./App.scss";
+import MainMenu from "./pages/MainMenu/MainMenu";
+import {Switch, BrowserRouter, Route} from 'react-router-dom';
+import Footer from "./pages/Footer/Footer";
+import Settings from "./pages/Settings/Settings";
+import Score from "./pages/Score/Score";
+import Game from "./pages/Game/Game";
 
 function App() {
   return (
-    <div className="App">
-      1
-    </div>
+    <BrowserRouter>
+      <div className="App" style={{backgroundColor: 'ghostwhite'}}>
+        <div className="main">
+          <Switch>
+            <Route component={MainMenu} path="/" exact />
+            <Route component={Game} path="/game" />
+            <Route component={Settings} path="/settings" />
+            <Route component={Score} path="/score" />
+          </Switch>
+        </div>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 
