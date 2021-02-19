@@ -1,17 +1,17 @@
 .App {
   margin: 0 auto;
   text-align: center;
-  // display: flex;
-  // justify-content: center;
+  display: flex;
+  justify-content: space-between;
   // align-items: center;
-  // flex-direction: column;
+  flex-direction: column;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 }
 
-.main {
- height: calc(100vh - 105px);
-}
+// .main {
+//  height: calc(100vh - 105px);
+// }
 
 .footer {
   width: 100%;
@@ -31,4 +31,47 @@
   .MuiButton-root {
     min-width: 200px;
   }
+}
+
+.card-container {
+  margin: 0 auto;
+  max-width: 1020px;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template: repeat(4, auto) / repeat(4, auto);
+  row-gap: 1vh;
+
+  @media screen and (max-width: 1024px) {
+    grid-template: repeat(4, auto)/ repeat(4, auto);
+  }
+  @media screen and (max-width: 900px) {
+    grid-template: repeat(6, auto)/ repeat(3, auto);
+  }
+  @media screen and (max-width: 640px) {
+    grid-template: repeat(8, auto)/ repeat(2, auto);
+  }
+
+  .card-item {
+    perspective: 600px;
+    max-width: 250px;
+    border-radius: 10px;
+    background: burlywood;
+    cursor: pointer;
+    transition: 0.1s;
+    
+    // transform: rotateY(180deg);
+
+    @media screen and (max-width: 1024px) {
+      max-width: 200px;
+    }
+    &:hover{      
+      background: coral;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .8);
+    }
+  }
+}
+
+.back {
+  transform: rotateY(180deg);
 }

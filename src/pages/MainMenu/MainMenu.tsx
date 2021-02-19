@@ -1,21 +1,15 @@
-import React from "react";
-import MenuElement from '../../component/MenuElement'
+import React, { useContext } from "react";
+import MenuElement from "../../component/MenuElement";
+import { mainStore } from "../../Data/Data";
+
 
 function MainMenu() {
-  const menuData = [
-    { name: "New Game", to: "/game", disabled: false },
-    { name: "Continue", to: "/game" , disabled: true},
-    { name: "Settings", to: "/settings", disabled: false },
-    { name: "Score", to: "/score", disabled: false },
-  ];
+  const { mainMenuElements } = mainStore;
+  const menuList = mainMenuElements.map((el, i) => (
+    <MenuElement name={el.name} to={el.to} disabled={el.disabled} key={i} />
+  ));
 
-  const menuList = menuData.map(el => <MenuElement name={el.name} to={el.to} disabled={el.disabled}/>)
-  
-  return (
-    <ul className="menuList">
-      {menuList}
-    </ul>
-  );
+  return <ul className="menuList">{menuList}</ul>;
 }
 
 export default MainMenu;
