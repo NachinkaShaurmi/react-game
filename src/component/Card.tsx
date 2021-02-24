@@ -4,10 +4,12 @@ type imageProps = {
   url: string;
   id: number;
   isFlip: boolean;
+  isCanFlip: boolean;
   handleClick(id: number): void;
 };
 
-export default function Image({ url, isFlip, handleClick, id }: imageProps) {
+export default function Image({ url, isFlip, handleClick, id, isCanFlip }: imageProps) {
+  
   let classList = "card-item";
   if (!isFlip) {
     classList += " front";
@@ -15,7 +17,7 @@ export default function Image({ url, isFlip, handleClick, id }: imageProps) {
       <img
         className={classList}
         src={"./images/back3.jpg"}
-        onClick={() => handleClick(id)}
+        onClick={() => isCanFlip ? handleClick(id) : null}
       />
     );
   }

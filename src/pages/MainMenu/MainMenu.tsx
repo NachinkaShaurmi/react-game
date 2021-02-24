@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
 import MenuElement from "../../component/MenuElement";
-import { mainStore } from "../../Data/Data";
+import { initStore } from "../../Data/Data";
 
+type mainMenuProps = {
+  mainMenuElements: any[]
+}
 
-function MainMenu() {
-  const { mainMenuElements } = mainStore;
+function MainMenu({mainMenuElements}: mainMenuProps) {
+  //const { mainMenuElements } = initStore;
   const menuList = mainMenuElements.map((el, i) => (
     <MenuElement name={el.name} to={el.to} disabled={el.disabled} key={i} />
   ));
