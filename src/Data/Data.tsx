@@ -5,10 +5,9 @@ export const initStore = {
 
   mainMenuElements: [
     { name: "New Game", to: "/game", disabled: false },
-    // { name: "Continue", to: "/game", disabled: true },
     { name: "Settings", to: "/settings", disabled: false },
     { name: "Score", to: "/score", disabled: false },
-  ], // mainMenuElements[1].disabled = false
+  ], 
   cardsPathName: [
     "1.jpg",
     "2.jpg",
@@ -27,6 +26,7 @@ export const initStore = {
   selectedCategory: 'fruits',
   level: [6, 8, 12, 16],
   isNewGame: true,
+  winCondition: ['', 100, 6],
 
 };
 

@@ -5,7 +5,7 @@ type imageProps = {
   id: number;
   isFlip: boolean;
   isCanFlip: boolean;
-  handleClick(id: number): void;
+  handleClick(id: number, url: string): void;
 };
 
 export default function Image({ url, isFlip, handleClick, id, isCanFlip }: imageProps) {
@@ -17,7 +17,7 @@ export default function Image({ url, isFlip, handleClick, id, isCanFlip }: image
       <img
         className={classList}
         src={"./images/back3.jpg"}
-        onClick={() => isCanFlip ? handleClick(id) : null}
+        onClick={() => isCanFlip ? handleClick(id, url) : null}
       />
     );
   }

@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { initStore } from "../../Data/Data";
 import Card from "../../component/Card";
 import GameHeader from "../../component/GameHeader";
-
-// type imgPack = {
-//   url: string;
-//   id: number;
-//   isFlip: boolean;
-// };
+import { Redirect, useHistory } from "react-router-dom";
 
 type gameProps = {
-  handleClick(id: number): void
-  reverseFlip(id: number): void
-  startNewGame(): void
-  imgPack: any[]
-}
+  handleClick(id: number, url: string): void;
+  startNewGame(): void;
+  imgPack: any[];
+  isWin: number;
+};
 
 function Game(props: gameProps) {
-
-  useEffect(()=>{
-    props.startNewGame()
-    console.log('startNewGame')
-  }, [])
+  useEffect(() => {
+    props.startNewGame();
+  }, []);
 
   const cardList = props.imgPack.map((el) => (
     <Card
@@ -33,6 +25,15 @@ function Game(props: gameProps) {
       handleClick={props.handleClick}
     />
   ));
+
+  let history = useHistory();
+  useEffect(() => {
+    if (!props.isWin) {
+      setTimeout(() => {
+        history.push("/win", { update: true });
+      }, 1500);
+    }
+  }, [props.isWin]);
 
   return (
     <>
