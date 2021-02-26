@@ -1,11 +1,21 @@
-import React from 'react'
+import React from "react";
 
-function GameHeader() {
-  return (
-    <div>
-      GameHeader
-    </div>
-  )
+type GameHeaderProps = {
+  level: string
+  steps: number
 }
 
-export default GameHeader
+function GameHeader({level, steps}: GameHeaderProps) {
+  return (
+    <div className="GameHeader">
+      <h3 className="GameHeader-element">
+        {`Difficult: ${level}`}
+      </h3>
+      <h3 className="GameHeader-element">
+        {`Steps: ${steps}`}
+      </h3>
+    </div>
+  );
+}
+
+export default GameHeader;

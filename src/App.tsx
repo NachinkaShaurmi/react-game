@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./App.scss";
-import {
-  Switch,
-  BrowserRouter,
-  Route,
-  Redirect,
-  useHistory,
-} from "react-router-dom";
+import { Switch, BrowserRouter, Route } from "react-router-dom";
 import MainMenu from "./pages/MainMenu/MainMenu";
 import Footer from "./pages/Footer/Footer";
 import Settings from "./pages/Settings/Settings";
 import Score from "./pages/Score/Score";
 import Game from "./pages/Game/Game";
-import WinGame from "./pages/WinGame/WinGame";
+import shuffleArray from "./Data/ShuffleArray";
+import checkLocalStorage from "./Data/CheckLocalStorage";
+import playMusic, {
+  flipSound,
+  miniSuccessSound,
+  successSound,
+} from "./Data/AudioAPI";
+// import WinGame from "./pages/WinGame/WinGame";
 import { initStore } from "./Data/Data";
+import WinGame from "./component/WinGame";
 
 type imgPackProps = {
   url: string;
@@ -22,17 +24,13 @@ type imgPackProps = {
   isCanFlip: boolean;
 };
 
-type mainMenuProps = {
-  mainMenuElements: any[];
-};
+// type mainMenuProps = {
+//   mainMenuElements: any[];
+//   handleClick(name: string): void;
+// };
 
 function App() {
-  let newStore;
-  if (localStorage.getItem("store") !== null) {
-    newStore = JSON.parse(localStorage.getItem("store") || "");
-  } else {
-    newStore = initStore;
-  }
+  const newStore = checkLocalStorage("store", initStore);
   const [store, setStore] = useState(newStore);
 
   useEffect(() => {
@@ -42,52 +40,33 @@ function App() {
   const {
     mainMenuElements,
     cardsPathName,
-    category,
+    music,
+    sound,
+    volume,
     selectedCategory,
     level,
     isNewGame,
-    winCondition,
+    selectedLevel,
+    steps,
   } = store;
 
-  // const [imgPack, setImgPack] = useState(
-  //   createImgPack(level[0], selectedCategory)
-  // );
-
-  let newImgPack: imgPackProps[];
-  if (localStorage.getItem("imgPack") !== null) {
-    newImgPack = JSON.parse(localStorage.getItem("imgPack") || "");
-  } else {
-    newImgPack = createImgPack(level[0], selectedCategory);
-  }
+  const newImgPack: imgPackProps[] = checkLocalStorage(
+    "imgPack",
+    createImgPack(level[0], selectedCategory)
+  );
   const [imgPack, setImgPack] = useState(newImgPack);
 
   useEffect(() => {
     localStorage.setItem("imgPack", JSON.stringify(imgPack));
   }, [imgPack]);
 
-  function shuffleArray(ar: string[]): string[] {
-    const sortAr = [...ar];
-    return sortAr.sort(() => 0.5 - Math.random());
-  }
-
-  // const reverseFlip = (): void => {
-  //   setImgPack((prev) =>
-  //     prev.map((el) => {
-  //       el.isCanFlip = true;
-  //       if (el.isFlip === true) {
-  //         el.isFlip = false;
-  //       }
-  //       return el;
-  //     })
-  //   );
-  // };
-
   const startNewGame = (): void => {
     if (!isNewGame) return;
+    console.log("start");
     setStore((prev: any) => {
       return {
         ...prev,
-        isNewGame: false,
+        isNewGame: !isNewGame,
       };
     });
 
@@ -107,7 +86,6 @@ function App() {
       prev.map((el) => {
         if (el.id === id) {
           el.isFlip = !el.isFlip;
-          // el.isCanFlip = !el.isCanFlip
         }
         return el;
       })
@@ -123,16 +101,22 @@ function App() {
     );
   };
 
-  const handleClick = (id: number, url: string): void => {
+  const handleClickGame = (id: number, url: string): void => {
     setStore((prev: any) => {
       let newStore = Object.assign({}, prev);
+      newStore.steps = prev.steps + 1;
       if (prev.winCondition[0] === url && id !== prev.winCondition[1]) {
-        flipCard(id);
+        miniSuccessSound();
+        if (sound) flipCard(id);
         flipCard(prev.winCondition[1]);
         newStore.winCondition = ["", 100, prev.winCondition[2] - 2];
       } else {
         flipCard(id);
         toggleAllCardCanFlip();
+        if (sound) {
+          console.log(22)
+          flipSound();
+        }
         setTimeout(() => {
           flipCard(id);
           toggleAllCardCanFlip();
@@ -141,6 +125,20 @@ function App() {
       }
       return newStore;
     });
+  };
+
+  const handleClickNewGame = (name: string): void => {
+    if (name === "New Game") {
+      setImgPack(createImgPack(level[0], selectedCategory));
+      setStore((prev: any) => {
+        return {
+          ...prev,
+          isNewGame: true,
+          winCondition: ["", 100, 6],
+          steps: 0,
+        };
+      });
+    }
   };
 
   function createImgPack(
@@ -165,24 +163,32 @@ function App() {
         <div className="main">
           <Switch>
             <Route
-              render={() => <MainMenu mainMenuElements={mainMenuElements} />}
+              render={() => (
+                <MainMenu
+                  mainMenuElements={mainMenuElements}
+                  handleClick={handleClickNewGame}
+                />
+              )}
               path="/"
               exact
             />
             <Route
               render={() => (
                 <Game
-                  handleClick={handleClick}
+                  music={music}
+                  steps={steps}
+                  level={selectedLevel}
+                  handleClick={handleClickGame}
                   startNewGame={startNewGame}
                   imgPack={imgPack}
-                  isWin={store.winCondition[2]}
+                  isWinCondition={store.winCondition[2]}
                 />
               )}
               path="/game"
             />
             <Route render={() => <Settings />} path="/settings" />
             <Route render={() => <Score />} path="/score" />
-            <Route render={() => <WinGame />} path="/win" />
+            {/* <Route render={() => <WinGame />} path="/win" /> */}
           </Switch>
         </div>
         <Footer />

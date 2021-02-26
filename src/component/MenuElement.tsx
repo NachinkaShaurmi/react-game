@@ -6,13 +6,15 @@ interface MenuEl {
   name: string;
   to: string;
   disabled: boolean;
+  handleClick(name: string): void
 }
 
-function MenuElement({ name, to, disabled }: MenuEl) {
+
+function MenuElement({ name, to, disabled, handleClick}: MenuEl) {
   return (
     <li>
       <NavLink to={to} className="menuList-button">
-        <Button variant="contained" color="primary" disabled={disabled}>
+        <Button variant="contained" color="primary" disabled={disabled} onClick={() => handleClick(name)}>
           {name}
         </Button>
       </NavLink>
