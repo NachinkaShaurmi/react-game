@@ -1,9 +1,11 @@
 import React from 'react'
+import { MainMenuButton } from '../../component/ButtonMainMenu'
 
 function WinGame() {
   return (
     <div className='win'>
-      You Win
+      
+      <MainMenuButton />
     </div>
   )
 }

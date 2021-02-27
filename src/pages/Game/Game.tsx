@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../component/Card";
 import GameHeader from "../../component/GameHeader";
-import WinGame from "../../component/WinGame";
+import WinGame from "../Win/WinGame";
 import { Redirect, useHistory } from "react-router-dom";
-import playMusic, {successSound, mainTheme} from "../../Data/AudioAPI";
+import { successSound } from "../../Data/AudioAPI";
+import { MainMenuButton } from "../../component/ButtonMainMenu";
 
 type gameProps = {
   handleClick(id: number, url: string): void;
@@ -11,38 +12,53 @@ type gameProps = {
   imgPack: any[];
   isWinCondition: number;
   level: string;
-  steps: number
-  music: boolean
+  steps: number;
+  volume: number;
+  music: boolean;
+  sound: boolean;
+  selectedBacksideColor: number;
 };
 
-function Game({handleClick, startNewGame, imgPack, isWinCondition, level, steps, music}: gameProps) {
+function Game({
+  selectedBacksideColor,
+  handleClick,
+  startNewGame,
+  imgPack,
+  isWinCondition,
+  level,
+  steps,
+  music,
+  sound,
+  volume,
+}: gameProps) {
+  let history = useHistory();
   const [isWin, setIsWin] = useState(false);
 
-  // const mt = new Audio("");
-  // mt.src = `audio/mainTheme.mp3`;
-  // mt.volume = 0.5;
-  
-  
-  
-  useEffect(() => {
-    if (music) mainTheme()
-    return () => {
-        mainTheme()
-      }
-      
-  }, [])
+  const mt = new Audio("");
+  mt.src = `audio/mainTheme.mp3`;
+  mt.volume = volume;
+  mt.loop = true;
 
+  useEffect(() => {
+    if (music) {
+      mt.play();
+      return () => {
+        mt.pause();
+      };
+    }
+  }, []);
 
   useEffect(() => {
     // console.log(1,isWinCondition)
-    if (isWinCondition === 0 && isWin=== false) {
+    if (isWinCondition === 0 && isWin === false) {
       setTimeout(() => {
-        setIsWin(true)
-        successSound()
+        setIsWin(true);
+        if (sound) successSound(volume);
+        history.push("/win", { update: true });
         // console.log(1,isWin)
-      }, 1500)  
+      }, 1500);
     }
-  }, [isWinCondition])
+  }, [isWinCondition]);
 
   useEffect(() => {
     startNewGame();
@@ -56,25 +72,25 @@ function Game({handleClick, startNewGame, imgPack, isWinCondition, level, steps,
       isFlip={el.isFlip}
       isCanFlip={el.isCanFlip}
       handleClick={handleClick}
+      selectedBacksideColor={selectedBacksideColor}
     />
   ));
 
-  // let history = useHistory();
   // useEffect(() => {
-  //   if (!props.isWin) {
+  //   if (isWin) {
   //     setTimeout(() => {
   //       history.push("/win", { update: true });
   //     }, 1500);
   //   }
-  // }, [props.isWin]);
+  // }, [isWin]);
 
   return (
-    <div className='game'>
-      <GameHeader level = {level} steps={steps}/>
+    <div className="game">
+      <GameHeader level={level} steps={steps} />
       {
-        isWin ? <WinGame /> : <div className="card-container">{cardList}</div>
+        // isWin ? <WinGame /> :
+        <div className="card-container">{cardList}</div>
       }
-      
     </div>
   );
 }

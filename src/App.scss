@@ -15,7 +15,7 @@
 
 .footer {
   width: 100%;
-  height: 100px;
+  height: 80px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -47,13 +47,13 @@
   gap: 6px;
 
   @media screen and (max-width: 1024px) {
-    grid-template: repeat(4, auto)/ repeat(4, auto);
+    grid-template: repeat(4, auto) / repeat(4, auto);
   }
   @media screen and (max-width: 900px) {
-    grid-template: repeat(6, auto)/ repeat(3, auto);
+    grid-template: repeat(6, auto) / repeat(3, auto);
   }
   @media screen and (max-width: 640px) {
-    grid-template: repeat(8, auto)/ repeat(2, auto);
+    grid-template: repeat(8, auto) / repeat(2, auto);
   }
 
   .card-item {
@@ -63,15 +63,15 @@
     background: burlywood;
     cursor: pointer;
     transition: 0.1s;
-    
+
     // transform: rotateY(180deg);
 
     @media screen and (max-width: 1024px) {
       max-width: 200px;
     }
-    &:hover{      
+    &:hover {
       background: coral;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, .8);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
     }
   }
 }
@@ -86,18 +86,34 @@
 .GameHeader {
   display: flex;
   justify-content: space-around;
+  margin: 1rem;
   &-element {
     border-radius: 10px;
     background-color: burlywood;
-    padding: .5rem;
-    margin: 1rem;
+    padding: 0.5rem;
     min-width: 100px;
-  } 
+  }
 }
-// .game {
-//   height: 100%;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-// }
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  //align-items: center;
+  margin: 1rem auto;
+  gap: 2rem;
+
+  &-form {
+
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    gap: 1rem;
+    width: 250px;
+  }
+}
+
+.mt1r {
+  margin-top: 10rem;
+}

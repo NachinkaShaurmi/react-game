@@ -13,9 +13,9 @@ import playMusic, {
   miniSuccessSound,
   successSound,
 } from "./Data/AudioAPI";
-// import WinGame from "./pages/WinGame/WinGame";
 import { initStore } from "./Data/Data";
-import WinGame from "./component/WinGame";
+import WinGame from "./pages/Win/WinGame";
+import { PersonalVideo } from "@material-ui/icons";
 
 type imgPackProps = {
   url: string;
@@ -48,11 +48,12 @@ function App() {
     isNewGame,
     selectedLevel,
     steps,
+    selectedBacksideColor,
   } = store;
 
   const newImgPack: imgPackProps[] = checkLocalStorage(
     "imgPack",
-    createImgPack(level[0], selectedCategory)
+    createImgPack(level[selectedLevel], selectedCategory) // todo1
   );
   const [imgPack, setImgPack] = useState(newImgPack);
 
@@ -101,27 +102,56 @@ function App() {
     );
   };
 
+  const handleSetting = (name: string, payload: any): void => {
+    setStore((prev: any) => {
+      let newStore = Object.assign({}, prev);
+      switch (name) {
+        case "level":
+          newStore.selectedLevel = payload;
+          newStore.winCondition = ["", 100, level[payload]];
+          return newStore;
+        case "BacksideColor":
+          newStore.selectedBacksideColor = payload;
+          return newStore;
+        case "Image":
+          newStore.selectedCategory = payload;
+          return newStore;
+        case "isSound":
+          newStore.sound = payload;
+          return newStore;
+        case "isMusic":
+          newStore.music = payload;
+          return newStore;
+        default:
+          return newStore;
+      }
+    });
+  };
+
+  const handleVolume = (value: number): void => {
+    setStore((prev: any) => {
+      return { ...prev, volume: value / 100 };
+    });
+  };
+
   const handleClickGame = (id: number, url: string): void => {
     setStore((prev: any) => {
       let newStore = Object.assign({}, prev);
       newStore.steps = prev.steps + 1;
       if (prev.winCondition[0] === url && id !== prev.winCondition[1]) {
-        miniSuccessSound();
-        if (sound) flipCard(id);
+        if (sound) miniSuccessSound(volume);
+        flipCard(id);
         flipCard(prev.winCondition[1]);
-        newStore.winCondition = ["", 100, prev.winCondition[2] - 2];
+        newStore.winCondition = ["", 100, prev.winCondition[2] - 2]; // todo2
       } else {
         flipCard(id);
         toggleAllCardCanFlip();
-        if (sound) {
-          console.log(22)
-          flipSound();
-        }
+        if (sound) flipSound(volume);
         setTimeout(() => {
           flipCard(id);
           toggleAllCardCanFlip();
         }, 1500);
-        newStore.winCondition = [url, id, prev.winCondition[2]];
+        newStore.winCondition = [url, id, prev.winCondition[2]]; // todo2
       }
       return newStore;
     });
@@ -129,12 +159,12 @@ function App() {
 
   const handleClickNewGame = (name: string): void => {
     if (name === "New Game") {
-      setImgPack(createImgPack(level[0], selectedCategory));
+      setImgPack(createImgPack(level[selectedLevel], selectedCategory)); // todo1
       setStore((prev: any) => {
         return {
           ...prev,
           isNewGame: true,
-          winCondition: ["", 100, 6],
+          winCondition: ["", 100, level[selectedLevel]],
           steps: 0,
         };
       });
@@ -142,7 +172,7 @@ function App() {
   };
 
   function createImgPack(
-    count: number = 16,
+    count: number = 6,
     category: string = "fruits"
   ): imgPackProps[] {
     const shuffleCards = shuffleArray(cardsPathName).slice(0, count / 2);
@@ -176,19 +206,36 @@ function App() {
               render={() => (
                 <Game
                   music={music}
+                  sound={sound}
+                  volume={volume}
                   steps={steps}
                   level={selectedLevel}
                   handleClick={handleClickGame}
                   startNewGame={startNewGame}
                   imgPack={imgPack}
                   isWinCondition={store.winCondition[2]}
+                  selectedBacksideColor={selectedBacksideColor}
                 />
               )}
               path="/game"
             />
-            <Route render={() => <Settings />} path="/settings" />
+            <Route
+              render={() => (
+                <Settings
+                  handleSetting={handleSetting}
+                  handleVolume={handleVolume}
+                  selectedCategory={selectedCategory}
+                  selectedLevel={selectedLevel}
+                  selectedBacksideColor={selectedBacksideColor}
+                  sound={sound}
+                  music={music}
+                  volume={volume * 100}
+                />
+              )}
+              path="/settings"
+            />
             <Route render={() => <Score />} path="/score" />
-            {/* <Route render={() => <WinGame />} path="/win" /> */}
+            <Route render={() => <WinGame />} path="/win" />
           </Switch>
         </div>
         <Footer />

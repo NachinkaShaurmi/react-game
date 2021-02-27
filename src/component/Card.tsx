@@ -6,18 +6,25 @@ type imageProps = {
   isFlip: boolean;
   isCanFlip: boolean;
   handleClick(id: number, url: string): void;
+  selectedBacksideColor: number;
 };
 
-export default function Image({ url, isFlip, handleClick, id, isCanFlip }: imageProps) {
-  
+export default function Image({
+  selectedBacksideColor,
+  url,
+  isFlip,
+  handleClick,
+  id,
+  isCanFlip,
+}: imageProps) {
   let classList = "card-item";
   if (!isFlip) {
     classList += " front";
     return (
       <img
         className={classList}
-        src={"./images/back3.jpg"}
-        onClick={() => isCanFlip ? handleClick(id, url) : null}
+        src={`./images/back${selectedBacksideColor}.jpg`}
+        onClick={() => (isCanFlip ? handleClick(id, url) : null)}
       />
     );
   }
