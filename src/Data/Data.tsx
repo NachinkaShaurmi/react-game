@@ -36,6 +36,19 @@ export const initStore = {
   music: true,
   backsideColor: [1, 2, 3],
   selectedBacksideColor: 1,
+  name: "",
+  score: [
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+    ["", "", Infinity],
+  ],
 };
 
 // export const CardContext = React.createContext(false)

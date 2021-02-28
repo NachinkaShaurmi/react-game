@@ -113,6 +113,7 @@ function Settings({
               onChange={(e, v) => handleVolume(v)}
               aria-labelledby="continuous-slider"
               step={10}
+              marks
               valueLabelDisplay="auto"
               min={0}
               max={100}

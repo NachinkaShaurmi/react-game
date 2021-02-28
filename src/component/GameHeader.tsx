@@ -8,11 +8,12 @@ type GameHeaderProps = {
 }
 
 function GameHeader({level, steps}: GameHeaderProps) {
+  const levelString = ['easy', 'medium', 'hard', 'maximum']
   return (
     <>
     <div className="GameHeader">
       <h3 className="GameHeader-element">
-        {`Difficult: ${level}`}
+        {`Difficult: ${levelString[+level]}`}
       </h3>
       <MainMenuButton />
       <h3 className="GameHeader-element">
