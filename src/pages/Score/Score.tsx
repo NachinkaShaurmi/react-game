@@ -7,6 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { MainMenuButton } from "../../component/ButtonMainMenu";
 
 const useStyles = makeStyles({
   table: {
@@ -15,37 +16,25 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-) {
-  return { name, calories, fat };
-}
+type scoreProps = {
+  score: (number | string)[][];
+};
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 100),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 100),
-];
+// function createData(
+//   name: string,
+//   calories: number,
+//   fat: number,
+// ) {
+//   return { name, calories, fat };
+// }
 
-function Score() {
+function Score({ score }: scoreProps) {
   const classes = useStyles();
   return (
     <div className="score-container">
       <h2>Score</h2>
       <TableContainer component={Paper}>
-        <Table
-          className={classes.table}
-          size="small"
-        >
+        <Table className={classes.table} size="small">
           <TableHead>
             <TableRow>
               <TableCell>Level</TableCell>
@@ -54,18 +43,29 @@ function Score() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name}>
+            {score.map((row, i) => (
+              <TableRow key={row[0] + `${Date.now()}${i}`}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row[0] === -1
+                    ? "empty"
+                    : row[0] === 0
+                    ? "Easy"
+                    : row[0] === 1
+                    ? "Medium"
+                    : row[0] === 2
+                    ? "Hard"
+                    : row[0] === 3
+                    ? "Maximum"
+                    : "Impossible"}
                 </TableCell>
-                <TableCell>{row.calories}</TableCell>
-                <TableCell>{row.fat}</TableCell>
+                <TableCell>{row[1] === "" ? "empty" : row[1]}</TableCell>
+                <TableCell>{row[2] === 999999 ? "empty" : row[2]}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <MainMenuButton />
     </div>
   );
 }

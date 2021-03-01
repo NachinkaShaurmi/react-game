@@ -5,7 +5,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { NavLink } from "react-router-dom";
 
-function WinGame() {
+type winGameProps = {
+  handleNameSubmit(name: string): void
+}
+
+function WinGame({handleNameSubmit}: winGameProps) {
   const [name, setName] = useState("");
   const handleChangeName = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
     setName(target.value);
@@ -23,7 +27,7 @@ function WinGame() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => console.log(name)}
+          onClick={() => handleNameSubmit(name)}
         >
           Submit
         </Button>

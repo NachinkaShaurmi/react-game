@@ -41,7 +41,9 @@ function Game({
 
   useEffect(() => {
     if (music) {
-      mt.play();
+      setTimeout(() => {
+        mt.play();
+      }, 500)
       return () => {
         mt.pause();
       };

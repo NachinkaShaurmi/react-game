@@ -49,11 +49,12 @@ function App() {
     selectedLevel,
     steps,
     selectedBacksideColor,
+    score,
   } = store;
 
   const newImgPack: imgPackProps[] = checkLocalStorage(
     "imgPack",
-    createImgPack(level[selectedLevel], selectedCategory) // todo1
+    createImgPack(level[selectedLevel], selectedCategory)
   );
   const [imgPack, setImgPack] = useState(newImgPack);
 
@@ -142,7 +143,7 @@ function App() {
         if (sound) miniSuccessSound(volume);
         flipCard(id);
         flipCard(prev.winCondition[1]);
-        newStore.winCondition = ["", 100, prev.winCondition[2] - 2]; // todo2
+        newStore.winCondition = ["", 100, prev.winCondition[2] - 2];
       } else {
         flipCard(id);
         toggleAllCardCanFlip();
@@ -151,7 +152,7 @@ function App() {
           flipCard(id);
           toggleAllCardCanFlip();
         }, 1500);
-        newStore.winCondition = [url, id, prev.winCondition[2]]; // todo2
+        newStore.winCondition = [url, id, prev.winCondition[2]];
       }
       return newStore;
     });
@@ -159,7 +160,7 @@ function App() {
 
   const handleClickNewGame = (name: string): void => {
     if (name === "New Game") {
-      setImgPack(createImgPack(level[selectedLevel], selectedCategory)); // todo1
+      setImgPack(createImgPack(level[selectedLevel], selectedCategory));
       setStore((prev: any) => {
         return {
           ...prev,
@@ -169,6 +170,24 @@ function App() {
         };
       });
     }
+  };
+
+  const handleNameSubmit = (name: string): void => {
+    setStore((prev: any) => {
+      let newStore = Object.assign({}, prev);
+      newStore.score.push([selectedLevel, name, steps]);
+      newStore.score.sort(
+        (a: [number, string, number], b: [number, string, number]) => {
+          if (a[0] === b[0]) {
+            return a[2] - b[2];
+          } else {
+            return b[0] - a[0];
+          }
+        }
+      );
+      newStore.score.splice(9, 1);
+      return newStore;
+    });
   };
 
   function createImgPack(
@@ -234,8 +253,11 @@ function App() {
               )}
               path="/settings"
             />
-            <Route render={() => <Score />} path="/score" />
-            <Route render={() => <WinGame />} path="/win" />
+            <Route render={() => <Score score={score} />} path="/score" />
+            <Route
+              render={() => <WinGame handleNameSubmit={handleNameSubmit} />}
+              path="/win"
+            />
           </Switch>
         </div>
         <Footer />
