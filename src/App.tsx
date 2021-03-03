@@ -188,7 +188,6 @@ function App() {
         for (let i = 0; i < wiPathId.length; i++) {
           setTimeout(() => {
             flipCard(wiPathId[i]);
-            if (sound) flipSound(volume);
           }, 1000 * i);
         }
         return newImgPack;
