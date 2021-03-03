@@ -13,7 +13,7 @@ function Footer() {
       <a href="https://github.com/NachinkaShaurmi/" target="_blank">
         <GitHubIcon style={{ fontSize: 40 }} />
       </a>
-      <a href="https://www.youtube.com/feed/subscriptions" target="_blank">
+      <a href="https://youtu.be/eeZ0qDBMgP0" target="_blank">
         <YouTubeIcon style={{ fontSize: 40 }} />
       </a>
     </footer>
