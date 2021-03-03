@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Card from "../../component/Card";
 import GameHeader from "../../component/GameHeader";
 import WinGame from "../Win/WinGame";
@@ -9,41 +9,47 @@ import { MainMenuButton } from "../../component/ButtonMainMenu";
 type gameProps = {
   handleClick(id: number, url: string): void;
   startNewGame(): void;
+  demoGameAction(): void;
   imgPack: any[];
   isWinCondition: number;
   level: string;
   steps: number;
   volume: number;
+  volumeMusic: number;
   music: boolean;
   sound: boolean;
   selectedBacksideColor: number;
+  isDemo: boolean;
 };
 
 function Game({
   selectedBacksideColor,
   handleClick,
   startNewGame,
+  demoGameAction,
   imgPack,
   isWinCondition,
   level,
   steps,
   music,
   sound,
+  volumeMusic,
   volume,
+  isDemo,
 }: gameProps) {
   let history = useHistory();
   const [isWin, setIsWin] = useState(false);
 
   const mt = new Audio("");
   mt.src = `audio/mainTheme.mp3`;
-  mt.volume = volume;
+  mt.volume = volumeMusic;
   mt.loop = true;
 
   useEffect(() => {
     if (music) {
       setTimeout(() => {
         mt.play();
-      }, 500)
+      }, 500);
       return () => {
         mt.pause();
       };
@@ -51,13 +57,11 @@ function Game({
   }, []);
 
   useEffect(() => {
-    // console.log(1,isWinCondition)
     if (isWinCondition === 0 && isWin === false) {
       setTimeout(() => {
         setIsWin(true);
         if (sound) successSound(volume);
         history.push("/win", { update: true });
-        // console.log(1,isWin)
       }, 1500);
     }
   }, [isWinCondition]);
@@ -65,6 +69,14 @@ function Game({
   useEffect(() => {
     startNewGame();
   }, []);
+
+  useEffect(() => {
+    if (isDemo) {
+      demoGameAction();
+    }
+  }, []);
+
+  const gameFieldRef = useRef<HTMLDivElement>(null);
 
   const cardList = imgPack.map((el) => (
     <Card
@@ -78,20 +90,13 @@ function Game({
     />
   ));
 
-  // useEffect(() => {
-  //   if (isWin) {
-  //     setTimeout(() => {
-  //       history.push("/win", { update: true });
-  //     }, 1500);
-  //   }
-  // }, [isWin]);
-
   return (
     <div className="game">
-      <GameHeader level={level} steps={steps} />
+      <GameHeader level={level} steps={steps} gameFieldRef={gameFieldRef} />
       {
-        // isWin ? <WinGame /> :
-        <div className="card-container">{cardList}</div>
+        <div className="card-container" ref={gameFieldRef}>
+          {cardList}
+        </div>
       }
     </div>
   );

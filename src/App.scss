@@ -15,10 +15,14 @@
 
 .footer {
   width: 100%;
-  height: 80px;
+  height: 60px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  p {
+    font-weight: bold;
+    font-size: 2rem;
+  }
 }
 
 .menuList {
@@ -84,23 +88,27 @@
   margin-top: 3rem;
 }
 .GameHeader {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
   display: flex;
   justify-content: space-around;
-  margin: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap  ;
   &-element {
     border-radius: 10px;
     background-color: burlywood;
-    padding: 0.5rem;
+    padding: 0.3rem;
     min-width: 100px;
+    box-shadow: 2px 2px 2px white;
   }
 }
 
 .settings-container {
   display: flex;
   flex-direction: column;
-  //align-items: center;
-  margin: 1rem auto;
-  gap: 2rem;
+  align-items: center;
+  margin: 0.5rem auto;
+  gap: 1rem;
 
   &-form {
 

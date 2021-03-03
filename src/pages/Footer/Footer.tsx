@@ -9,6 +9,7 @@ function Footer() {
       <a href="https://rs.school/" target="_blank">
         <img src={rsIcons} width={100} />
       </a>
+      <p>2021</p>
       <a href="https://github.com/NachinkaShaurmi/" target="_blank">
         <GitHubIcon style={{ fontSize: 40 }} />
       </a>

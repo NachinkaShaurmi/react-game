@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.scss";
-import { Switch, BrowserRouter, Route } from "react-router-dom";
+import { Switch, BrowserRouter, Route, useHistory } from "react-router-dom";
 import MainMenu from "./pages/MainMenu/MainMenu";
 import Footer from "./pages/Footer/Footer";
 import Settings from "./pages/Settings/Settings";
@@ -8,14 +8,9 @@ import Score from "./pages/Score/Score";
 import Game from "./pages/Game/Game";
 import shuffleArray from "./Data/ShuffleArray";
 import checkLocalStorage from "./Data/CheckLocalStorage";
-import playMusic, {
-  flipSound,
-  miniSuccessSound,
-  successSound,
-} from "./Data/AudioAPI";
+import playMusic, { flipSound, miniSuccessSound } from "./Data/AudioAPI";
 import { initStore } from "./Data/Data";
 import WinGame from "./pages/Win/WinGame";
-import { PersonalVideo } from "@material-ui/icons";
 
 type imgPackProps = {
   url: string;
@@ -46,10 +41,12 @@ function App() {
     selectedCategory,
     level,
     isNewGame,
+    volumeMusic,
     selectedLevel,
     steps,
     selectedBacksideColor,
     score,
+    isDemo,
   } = store;
 
   const newImgPack: imgPackProps[] = checkLocalStorage(
@@ -64,7 +61,6 @@ function App() {
 
   const startNewGame = (): void => {
     if (!isNewGame) return;
-    console.log("start");
     setStore((prev: any) => {
       return {
         ...prev,
@@ -129,9 +125,15 @@ function App() {
     });
   };
 
-  const handleVolume = (value: number): void => {
+  const handleVolumeSound = (value: number): void => {
     setStore((prev: any) => {
       return { ...prev, volume: value / 100 };
+    });
+  };
+
+  const handleVolumeMusic = (value: number): void => {
+    setStore((prev: any) => {
+      return { ...prev, volumeMusic: value / 100 };
     });
   };
 
@@ -158,8 +160,44 @@ function App() {
     });
   };
 
+  const demoGameTrue = (): void => {
+    setStore((prev: any) => {
+      return { ...prev, isDemo: true };
+    });
+  };
+
+  const demoGameAction = (): void => {
+    setTimeout(() => {
+      let wiPathId: any = [];
+      setImgPack((prev) => {
+        let temp: any[] = [...prev];
+        let changeNewImgPack: any[] = [...prev];
+        while (temp.length !== 0) {
+          const url = temp[0].url;
+          let answer;
+          temp.forEach((el) => {
+            if (el.url === temp[0].url) {
+              answer = el.id;
+            }
+          });
+          wiPathId.push(temp[0].id, answer);
+          temp = temp.filter((el) => el.url !== url);
+        }
+        changeNewImgPack = prev.filter((el) => el.isFlip !== true);
+        const newImgPack = [...prev];
+        for (let i = 0; i < wiPathId.length; i++) {
+          setTimeout(() => {
+            flipCard(wiPathId[i]);
+            if (sound) flipSound(volume);
+          }, 1000 * i);
+        }
+        return newImgPack;
+      });
+    }, 3000);
+  };
+
   const handleClickNewGame = (name: string): void => {
-    if (name === "New Game") {
+    if (name === "New Game" || name === "Demo Game") {
       setImgPack(createImgPack(level[selectedLevel], selectedCategory));
       setStore((prev: any) => {
         return {
@@ -167,9 +205,11 @@ function App() {
           isNewGame: true,
           winCondition: ["", 100, level[selectedLevel]],
           steps: 0,
+          isDemo: false,
         };
       });
     }
+    if (name === "Demo Game") demoGameTrue();
   };
 
   const handleNameSubmit = (name: string): void => {
@@ -227,10 +267,13 @@ function App() {
                   music={music}
                   sound={sound}
                   volume={volume}
+                  volumeMusic={volumeMusic}
                   steps={steps}
+                  isDemo={isDemo}
                   level={selectedLevel}
                   handleClick={handleClickGame}
                   startNewGame={startNewGame}
+                  demoGameAction={demoGameAction}
                   imgPack={imgPack}
                   isWinCondition={store.winCondition[2]}
                   selectedBacksideColor={selectedBacksideColor}
@@ -242,13 +285,15 @@ function App() {
               render={() => (
                 <Settings
                   handleSetting={handleSetting}
-                  handleVolume={handleVolume}
+                  handleVolumeSound={handleVolumeSound}
+                  handleVolumeMusic={handleVolumeMusic}
                   selectedCategory={selectedCategory}
                   selectedLevel={selectedLevel}
                   selectedBacksideColor={selectedBacksideColor}
                   sound={sound}
                   music={music}
                   volume={volume * 100}
+                  volumeMusic={volumeMusic * 100}
                 />
               )}
               path="/settings"
@@ -262,6 +307,7 @@ function App() {
         </div>
         <Footer />
       </div>
+      {/* </FullScreen> */}
     </BrowserRouter>
   );
 }

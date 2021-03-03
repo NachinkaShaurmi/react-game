@@ -14,24 +14,28 @@ import InputLabel from "@material-ui/core/InputLabel";
 
 type SettingsProps = {
   handleSetting(name: string | undefined, payload: any): void;
-  handleVolume(value: number | number[]): void;
+  handleVolumeSound(value: number | number[]): void;
+  handleVolumeMusic(value: number | number[]): void;
   selectedCategory: string;
   selectedLevel: number;
   selectedBacksideColor: any;
   sound: boolean;
   music: boolean;
   volume: number;
+  volumeMusic: number;
 };
 
 function Settings({
   handleSetting,
-  handleVolume,
+  handleVolumeSound,
+  handleVolumeMusic,
   selectedCategory,
   selectedLevel,
   selectedBacksideColor,
   sound,
   music,
   volume,
+  volumeMusic,
 }: SettingsProps) {
   return (
     <div className="settings-container">
@@ -98,8 +102,9 @@ function Settings({
           />
           Music
         </label>
+
         <Typography id="continuous-slider" gutterBottom>
-          Volume
+          Volume Sound
         </Typography>
         <Grid container spacing={2}>
           <Grid item>
@@ -110,8 +115,34 @@ function Settings({
               name="volume"
               id="volume"
               defaultValue={volume}
-              onChange={(e, v) => handleVolume(v)}
+              onChange={(e, v) => handleVolumeSound(v)}
               aria-labelledby="continuous-slider"
+              step={10}
+              marks
+              valueLabelDisplay="auto"
+              min={0}
+              max={100}
+            />
+          </Grid>
+          <Grid item>
+            <VolumeUp />
+          </Grid>
+        </Grid>
+
+        <Typography id="continuous-slider-2" gutterBottom>
+          Volume Music
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item>
+            <VolumeDown />
+          </Grid>
+          <Grid item xs>
+            <Slider            
+              name="volumeMusic"
+              id="volumeMusic"
+              defaultValue={volumeMusic}
+              onChange={(e, v) => handleVolumeMusic(v)}
+              aria-labelledby="continuous-slider-2"
               step={10}
               marks
               valueLabelDisplay="auto"

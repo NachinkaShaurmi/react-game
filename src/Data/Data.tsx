@@ -1,6 +1,7 @@
 export const initStore = {
   mainMenuElements: [
     { name: "New Game", to: "/game", disabled: false },
+    { name: "Demo Game", to: "/game", disabled: false },
     { name: "Settings", to: "/settings", disabled: false },
     { name: "Score", to: "/score", disabled: false },
   ],
@@ -32,8 +33,10 @@ export const initStore = {
   winCondition: ["", 100, 6],
   steps: 0,
   volume: 0.5,
+  volumeMusic: 0.5,
   sound: true,
   music: true,
+  isDemo: false,
   backsideColor: [1, 2, 3],
   selectedBacksideColor: 1,
   name: "",
@@ -49,18 +52,4 @@ export const initStore = {
     [-1, "", 999999],
     [-1, "", 999999],
   ],
-  // score: [
-  //   [0, "", 10],
-  //   [1, "", 11],
-  //   [2, "", 12],
-  //   [3, "", 13],
-  //   [0, "", 14],
-  //   [1, "", 15],
-  //   [2, "", 16],
-  //   [3, "", 17],
-  //   [0, "", 18],
-  //   [1, "", 19],
-  // ],
 };
-
-// export const CardContext = React.createContext(false)
